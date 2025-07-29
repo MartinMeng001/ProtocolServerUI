@@ -1,0 +1,289 @@
+/* CSS变量定义文件 */
+:root {
+    /* 主题色彩 */
+    --primary-color: #409eff;
+    --primary-light: #79bbff;
+    --primary-dark: #337ecc;
+    --primary-lighter: #a0cfff;
+    --primary-extra-light: #ecf5ff;
+
+    /* 功能色彩 */
+    --success-color: #67c23a;
+    --success-light: #95d475;
+    --success-dark: #529b2e;
+    --success-lighter: #b3e19d;
+    --success-extra-light: #f0f9ff;
+
+    --warning-color: #e6a23c;
+    --warning-light: #ebb563;
+    --warning-dark: #b88230;
+    --warning-lighter: #f0c78a;
+    --warning-extra-light: #fdf6ec;
+
+    --danger-color: #f56c6c;
+    --danger-light: #f78989;
+    --danger-dark: #c45656;
+    --danger-lighter: #fab6b6;
+    --danger-extra-light: #fef0f0;
+
+    --error-color: #f56c6c;
+    --info-color: #909399;
+    --info-light: #a6a9ad;
+    --info-dark: #73767a;
+
+    /* 文本色彩 */
+    --text-color-primary: #303133;
+    --text-color-regular: #606266;
+    --text-color-secondary: #909399;
+    --text-color-placeholder: #c0c4cc;
+    --text-color-disabled: #c0c4cc;
+
+    /* 边框色彩 */
+    --border-color-base: #dcdfe6;
+    --border-color-light: #e4e7ed;
+    --border-color-lighter: #ebeef5;
+    --border-color-extra-light: #f2f6fc;
+    --border-color-dark: #d3d4d6;
+    --border-color-darker: #cdd0d6;
+
+    /* 背景色彩 */
+    --background-color-base: #f5f7fa;
+    --background-color-light: #fafbfc;
+    --background-color-lighter: #fefefe;
+    --background-color-white: #ffffff;
+
+    /* 填充色彩 */
+    --fill-color-base: #f0f2f5;
+    --fill-color-light: #f5f7fa;
+    --fill-color-lighter: #fafafa;
+    --fill-color-extra-light: #fafcff;
+    --fill-color-blank: #ffffff;
+    --fill-color-dark: #ebedf0;
+    --fill-color-darker: #e6e8eb;
+
+    /* 渐变色彩 */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-success: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-warning: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-danger: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+
+    /* 设备状态色彩 */
+    --device-online-color: #67c23a;
+    --device-offline-color: #f56c6c;
+    --device-warning-color: #e6a23c;
+    --device-normal-color: #909399;
+
+    /* 电池状态色彩 */
+    --battery-high-color: #67c23a;
+    --battery-medium-color: #e6a23c;
+    --battery-low-color: #f56c6c;
+    --battery-critical-color: #c45656;
+
+    /* GPS状态色彩 */
+    --gps-located-color: #67c23a;
+    --gps-not-located-color: #e6a23c;
+    --gps-error-color: #f56c6c;
+
+    /* 工作模式色彩 */
+    --mode-auto-color: #409eff;
+    --mode-manual-color: #e6a23c;
+    --mode-test-color: #909399;
+
+    /* 尺寸变量 */
+    --border-radius-base: 4px;
+    --border-radius-small: 2px;
+    --border-radius-round: 20px;
+    --border-radius-circle: 50%;
+
+    /* 字体大小 */
+    --font-size-extra-large: 20px;
+    --font-size-large: 18px;
+    --font-size-medium: 16px;
+    --font-size-base: 14px;
+    --font-size-small: 13px;
+    --font-size-extra-small: 12px;
+
+    /* 字体粗细 */
+    --font-weight-primary: 500;
+    --font-weight-bold: 700;
+    --font-weight-normal: 400;
+
+    /* 行高 */
+    --line-height-primary: 24px;
+    --line-height-base: 1.5;
+
+    /* 间距变量 */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 20px;
+    --spacing-xxl: 24px;
+    --spacing-xxxl: 32px;
+
+    /* 阴影 */
+    --box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    --box-shadow-dark: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.12);
+    --box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+
+    /* 过渡动画 */
+    --transition-duration-fast: 0.15s;
+    --transition-duration-base: 0.3s;
+    --transition-duration-slow: 0.5s;
+    --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Z-index层级 */
+    --z-index-normal: 1;
+    --z-index-top: 1000;
+    --z-index-popper: 2000;
+
+    /* 布局变量 */
+    --header-height: 60px;
+    --sidebar-width: 200px;
+    --sidebar-collapsed-width: 64px;
+    --footer-height: 50px;
+
+    /* 卡片变量 */
+    --card-padding: 20px;
+    --card-border-radius: 8px;
+    --card-shadow: var(--box-shadow-base);
+
+    /* 表格变量 */
+    --table-border-color: var(--border-color-lighter);
+    --table-header-background: var(--fill-color-light);
+    --table-row-hover-background: var(--fill-color-light);
+    --table-stripe-background: var(--fill-color-lighter);
+
+    /* 按钮变量 */
+    --button-border-radius: var(--border-radius-base);
+    --button-font-weight: var(--font-weight-primary);
+    --button-padding-vertical: 12px;
+    --button-padding-horizontal: 20px;
+
+    /* 输入框变量 */
+    --input-height: 40px;
+    --input-border-radius: var(--border-radius-base);
+    --input-border-color: var(--border-color-base);
+    --input-focus-border-color: var(--primary-color);
+
+    /* 设备卡片专用变量 */
+    --device-card-width: 300px;
+    --device-card-height: 200px;
+    --device-card-border-radius: 12px;
+    --device-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --device-card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+    /* 状态指示器变量 */
+    --status-indicator-size: 8px;
+    --status-indicator-border-width: 2px;
+
+    /* 图表变量 */
+    --chart-grid-color: #f0f0f0;
+    --chart-axis-color: #666;
+    --chart-tooltip-background: rgba(50, 50, 50, 0.9);
+    --chart-tooltip-color: #fff;
+
+    /* 日志级别色彩 */
+    --log-info-color: var(--info-color);
+    --log-warning-color: var(--warning-color);
+    --log-error-color: var(--danger-color);
+    --log-debug-color: var(--success-color);
+
+    /* 连接状态色彩 */
+    --connection-active-color: var(--success-color);
+    --connection-inactive-color: var(--danger-color);
+    --connection-connecting-color: var(--warning-color);
+
+    /* 响应式断点 */
+    --breakpoint-xs: 480px;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1600px;
+
+    /* 加载动画变量 */
+    --loading-spinner-size: 28px;
+    --loading-text-color: var(--text-color-secondary);
+
+    /* 分页变量 */
+    --pagination-button-size: 32px;
+    --pagination-button-border-radius: var(--border-radius-base);
+
+    /* 标签变量 */
+    --tag-height: 24px;
+    --tag-padding: 0 8px;
+    --tag-border-radius: 4px;
+    --tag-font-size: 12px;
+
+    /* 统计卡片变量 */
+    --stat-card-height: 100px;
+    --stat-icon-size: 60px;
+    --stat-number-font-size: 28px;
+    --stat-label-font-size: 14px;
+
+    /* 侧边栏变量 */
+    --sidebar-background: #304156;
+    --sidebar-menu-item-height: 50px;
+    --sidebar-menu-active-background: #263445;
+    --sidebar-menu-hover-background: #263445;
+    --sidebar-text-color: #bfcbd9;
+    --sidebar-active-text-color: #409eff;
+
+    /* 头部导航变量 */
+    --header-background: #fff;
+    --header-border-color: #e4e7ed;
+    --header-text-color: var(--text-color-regular);
+
+    /* 面包屑变量 */
+    --breadcrumb-font-size: 14px;
+    --breadcrumb-separator-color: var(--text-color-placeholder);
+
+    /* 滚动条变量 */
+    --scrollbar-width: 6px;
+    --scrollbar-thumb-background: rgba(144, 147, 153, 0.3);
+    --scrollbar-thumb-hover-background: rgba(144, 147, 153, 0.5);
+    --scrollbar-track-background: transparent;
+}
+
+/* 暗色主题变量 */
+[data-theme="dark"] {
+    --text-color-primary: #e4e7ed;
+    --text-color-regular: #cfcfcf;
+    --text-color-secondary: #a8abb2;
+    --text-color-placeholder: #6c6e72;
+
+    --background-color-base: #1d1e1f;
+    --background-color-light: #25262a;
+    --background-color-lighter: #2b2d33;
+    --background-color-white: #303133;
+
+    --border-color-base: #4c4d4f;
+    --border-color-light: #414243;
+    --border-color-lighter: #363637;
+    --border-color-extra-light: #2b2b2c;
+
+    --fill-color-base: #25262a;
+    --fill-color-light: #2b2d33;
+    --fill-color-lighter: #303133;
+    --fill-color-extra-light: #25262a;
+
+    --sidebar-background: #1f2937;
+    --header-background: #374151;
+    --header-border-color: #4b5563;
+}
+
+/* 高对比度主题变量 */
+[data-theme="high-contrast"] {
+    --primary-color: #0066cc;
+    --success-color: #008800;
+    --warning-color: #cc6600;
+    --danger-color: #cc0000;
+
+    --text-color-primary: #000000;
+    --text-color-regular: #333333;
+    --background-color-white: #ffffff;
+
+    --border-color-base: #666666;
+    --border-color-light: #999999;
+}
