@@ -498,7 +498,7 @@ export class DeviceWebSocketFactory {
 
     const defaultConfig: WebSocketConfig = {
       url: deviceWsUrl,
-      protocols: ['device-protocol'],
+      //protocols: ['device-protocol'],
       reconnectInterval: 3000,
       maxReconnectAttempts: 10,
       heartbeatInterval: 30000,

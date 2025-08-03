@@ -1,194 +1,190 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { DeviceInfo, DeviceData, ConnectionInfo, DeviceStatistics, DeviceAlerts } from '@/types'
-import { deviceApi, protocolApi, monitorApi } from '@/services/api'
-import { ElMessage } from 'element-plus'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
-export const useDeviceStore = defineStore('device', () => {
-  // 状态
-  const devices = ref<DeviceInfo[]>([])
-  const connections = ref<ConnectionInfo[]>([])
-  const statistics = ref<DeviceStatistics | null>(null)
-  const alerts = ref<DeviceAlerts | null>(null)
-  const loading = ref(false)
-  const websocket = ref<WebSocket | null>(null)
-  const isConnected = ref(false)
-
-  // 计算属性
-  const onlineDevices = computed(() => devices.value.filter(d => d.online))
-  const offlineDevices = computed(() => devices.value.filter(d => !d.online))
-  const deviceCount = computed(() => devices.value.length)
-  const connectionCount = computed(() => connections.value.length)
-
-  // WebSocket连接
-  const initWebSocket = () => {
-    try {
-      const wsUrl = `ws://${window.location.host}/ws/device`
-      websocket.value = new WebSocket(wsUrl)
-
-      websocket.value.onopen = () => {
-        isConnected.value = true
-        console.log('WebSocket连接已建立')
-      }
-
-      websocket.value.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          handleWebSocketMessage(data)
-        } catch (error) {
-          console.error('解析WebSocket消息失败:', error)
+// 路由配置
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Layout',
+    component: () => import('@/views/Layout.vue'),
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/Dashboard.vue'),
+        meta: {
+          title: '仪表盘',
+          icon: 'Odometer',
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'devices',
+        name: 'Devices',
+        component: () => import('@/views/Devices.vue'),
+        meta: {
+          title: '设备管理',
+          icon: 'Monitor',
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'device/:deviceId', // 冒号表示这是一个动态参数
+        name: 'DeviceDetail',
+        component: () => import('@/views/DeviceDetail.vue'), // 假设有一个 DeviceDetail.vue 组件
+        meta: {
+          title: '设备详情',
+          requiresAuth: false,
+          hideInMenu: true // 在菜单中隐藏
+        }
+      },
+      {
+        path: 'connections',
+        name: 'Connections',
+        component: () => import('@/views/Connections.vue'),
+        meta: {
+          title: '连接管理',
+          icon: 'Connection',
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'config',
+        name: 'Config',
+        component: () => import('@/views/Config.vue'),
+        meta: {
+          title: '设备配置',
+          icon: 'Setting',
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'logs',
+        name: 'Logs',
+        component: () => import('@/views/Logs.vue'),
+        meta: {
+          title: '日志管理',
+          icon: 'Document',
+          requiresAuth: false
         }
       }
+    ]
+  },
+  // {
+  //   path: '/404',
+  //   name: 'NotFound',
+  //   component: () => import('@/views/NotFound.vue'),
+  //   meta: {
+  //     title: '页面未找到',
+  //     requiresAuth: false,
+  //     hideInMenu: true,
+  //     hideInLayout: true
+  //   }
+  // },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404'
+  }
+]
 
-      websocket.value.onclose = () => {
-        isConnected.value = false
-        console.log('WebSocket连接已关闭')
-        // 5秒后重连
-        setTimeout(() => {
-          if (!isConnected.value) {
-            initWebSocket()
-          }
-        }, 5000)
-      }
-
-      websocket.value.onerror = (error) => {
-        console.error('WebSocket错误:', error)
-        isConnected.value = false
-      }
-    } catch (error) {
-      console.error('初始化WebSocket失败:', error)
+// 创建路由实例
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 始终滚动到顶部
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
     }
-  }
-
-  // 处理WebSocket消息
-  const handleWebSocketMessage = (data: any) => {
-    if (Array.isArray(data)) {
-      // 如果是设备列表数据
-      updateDevicesFromData(data)
-    } else if (data.ID) {
-      // 如果是单个设备数据更新
-      updateSingleDevice(data)
-    }
-  }
-
-  // 更新设备列表
-  const updateDevicesFromData = (deviceDataList: DeviceData[]) => {
-    // 这里可以根据实际需要转换数据格式
-    console.log('收到设备列表更新:', deviceDataList)
-  }
-
-  // 更新单个设备
-  const updateSingleDevice = (deviceData: DeviceData) => {
-    const index = devices.value.findIndex(d => d.deviceId === deviceData.ID)
-    if (index !== -1) {
-      // 更新现有设备
-      devices.value[index] = {
-        ...devices.value[index],
-        mode: deviceData.Mode,
-        batteryVoltage: deviceData.V,
-        gpsStatus: deviceData.status,
-        latitude: deviceData.lat,
-        longitude: deviceData.lon,
-        lastHeartbeat: Date.now(),
-      }
-    }
-  }
-
-  // 获取设备列表
-  const fetchDevices = async () => {
-    try {
-      loading.value = true
-      const response = await deviceApi.getDeviceList()
-      if (response.success) {
-        devices.value = response.data
-      } else {
-        ElMessage.error('获取设备列表失败: ' + response.message)
-      }
-    } catch (error) {
-      console.error('获取设备列表失败:', error)
-      ElMessage.error('获取设备列表失败')
-    } finally {
-      loading.value = false
-    }
-  }
-
-  // 获取连接列表
-  const fetchConnections = async () => {
-    try {
-      const response = await protocolApi.getConnections()
-      if (response.success) {
-        connections.value = response.data
-      }
-    } catch (error) {
-      console.error('获取连接列表失败:', error)
-    }
-  }
-
-  // 获取统计信息
-  const fetchStatistics = async () => {
-    try {
-      const response = await monitorApi.getDeviceStatistics()
-      if (response.success) {
-        statistics.value = response.data
-      }
-    } catch (error) {
-      console.error('获取统计信息失败:', error)
-    }
-  }
-
-  // 获取告警信息
-  const fetchAlerts = async () => {
-    try {
-      const response = await monitorApi.getDeviceAlerts()
-      if (response.success) {
-        alerts.value = response.data
-      }
-    } catch (error) {
-      console.error('获取告警信息失败:', error)
-    }
-  }
-
-  // 刷新所有数据
-  const refreshData = async () => {
-    await Promise.all([
-      fetchDevices(),
-      fetchConnections(),
-      fetchStatistics(),
-      fetchAlerts(),
-    ])
-  }
-
-  // 销毁WebSocket连接
-  const closeWebSocket = () => {
-    if (websocket.value) {
-      websocket.value.close()
-      websocket.value = null
-      isConnected.value = false
-    }
-  }
-
-  return {
-    // 状态
-    devices,
-    connections,
-    statistics,
-    alerts,
-    loading,
-    isConnected,
-
-    // 计算属性
-    onlineDevices,
-    offlineDevices,
-    deviceCount,
-    connectionCount,
-
-    // 方法
-    initWebSocket,
-    closeWebSocket,
-    fetchDevices,
-    fetchConnections,
-    fetchStatistics,
-    fetchAlerts,
-    refreshData,
   }
 })
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  // 设置页面标题
+  if (to.meta?.title) {
+    document.title = `${to.meta.title} - 物联网设备管理系统`
+  } else {
+    document.title = '物联网设备管理系统'
+  }
+
+  // 身份验证检查（如果需要的话）
+  if (to.meta?.requiresAuth) {
+    // 这里可以添加身份验证逻辑
+    // const isAuthenticated = checkAuth()
+    // if (!isAuthenticated) {
+    //   next('/login')
+    //   return
+    // }
+  }
+
+  // 路由权限检查
+  if (to.meta?.requiresPermission) {
+    // 这里可以添加权限检查逻辑
+    // const hasPermission = checkPermission(to.meta.requiresPermission)
+    // if (!hasPermission) {
+    //   next('/403')
+    //   return
+    // }
+  }
+
+  next()
+})
+
+router.afterEach((to, from) => {
+  // 路由跳转后的处理
+  console.log(`路由跳转: ${from.path} -> ${to.path}`)
+})
+
+// 路由错误处理
+router.onError((error) => {
+  console.error('路由错误:', error)
+})
+
+// 导出路由实例
+export default router
+
+// 导出路由配置，供其他地方使用（如菜单生成）
+export { routes }
+
+// 获取菜单路由（排除隐藏的路由）
+export const getMenuRoutes = (): RouteRecordRaw[] => {
+  const layoutRoute = routes.find(route => route.name === 'Layout')
+  if (layoutRoute && layoutRoute.children) {
+    return layoutRoute.children.filter(route =>
+      !route.meta?.hideInMenu &&
+      !route.meta?.hideInLayout
+    )
+  }
+  return []
+}
+
+// 根据路由名称获取路由配置
+export const getRouteByName = (name: string): RouteRecordRaw | undefined => {
+  return routes.find(route => route.name === name)
+}
+
+// 检查路由是否存在
+export const isValidRoute = (path: string): boolean => {
+  return routes.some(route =>
+    route.path === path ||
+    (route.children && route.children.some(child => child.path === path))
+  )
+}
+
+// 路由元数据类型声明
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    icon?: string
+    requiresAuth?: boolean
+    requiresPermission?: string | string[]
+    hideInMenu?: boolean
+    hideInLayout?: boolean
+    keepAlive?: boolean
+    affix?: boolean
+  }
+}

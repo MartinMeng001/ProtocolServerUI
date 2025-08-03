@@ -28,8 +28,8 @@
         <el-col :span="8">
           <el-statistic title="WebSocket状态">
             <template #default>
-              <el-tag :type="deviceStore.isConnected ? 'success' : 'danger'">
-                {{ deviceStore.isConnected ? '已连接' : '未连接' }}
+              <el-tag :type="connectionStore.isWebSocketConnected ? 'success' : 'danger'">
+                {{ connectionStore.isWebSocketConnected ? '已连接' : '未连接' }}
               </el-tag>
             </template>
           </el-statistic>
@@ -38,7 +38,7 @@
 
       <!-- 连接列表 -->
       <el-table
-        :data="deviceStore.connections"
+        :data="connectionStore.connections"
         style="width: 100%; margin-top: 20px;"
         v-loading="loading"
         row-key="connectionId"
@@ -232,9 +232,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useDeviceStore } from '@/stores/device'
+import { useConnectionStore } from '@/stores/connection'
 import { protocolApi } from '@/services/api'
 import { formatDistanceToNow, formatDuration as fnsFormatDuration } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
@@ -243,6 +244,7 @@ import type { ConnectionInfo, MessageRequest, BroadcastRequest } from '@/types'
 
 const router = useRouter()
 const deviceStore = useDeviceStore()
+const connectionStore = useConnectionStore()
 
 // 状态
 const loading = ref(false)
@@ -266,7 +268,7 @@ const selectedConnection = ref<ConnectionInfo | null>(null)
 
 // 计算属性
 const activeConnectionCount = computed(() =>
-  deviceStore.connections.filter(conn => conn.active).length
+  connectionStore.activeConnections.length
 )
 
 // 工具函数
@@ -295,7 +297,7 @@ const getDeviceByConnection = (connectionId: string) => {
 const refreshConnections = async () => {
   loading.value = true
   try {
-    await deviceStore.fetchConnections()
+    await connectionStore.fetchConnections()
     ElMessage.success('连接数据已刷新')
   } catch (error) {
     console.error('刷新连接失败:', error)
@@ -317,7 +319,7 @@ const showBroadcastDialog = () => {
 }
 
 const viewConnectionDetail = (connectionId: string) => {
-  selectedConnection.value = deviceStore.connections.find(
+  selectedConnection.value = connectionStore.connections.find(
     conn => conn.connectionId === connectionId
   ) || null
   detailDialogVisible.value = true

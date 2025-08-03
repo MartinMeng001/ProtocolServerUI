@@ -1,117 +1,81 @@
-// API 通用响应类型
+// ==================== API 通用类型 ====================
+
+// API响应基础接口
 export interface ApiResponse<T = any> {
-  success: boolean
-  message: string
-  data: T
+  success: boolean              // 请求是否成功
+  message: string               // 响应消息
+  data: T                       // 响应数据
+  timestamp?: number            // 时间戳
+  code?: string                 // 响应码
 }
 
-// 设备数据模型 - 基于协议文档的完整字段定义
+// ==================== 设备相关类型 ====================
+
+// 设备数据模型 - 来自硬件协议的完整数据结构
 export interface DeviceData {
-  ID: string                    // 设备ID
-  CMD: string                   // 命令类型
-  class?: string                // 子命令类型
-  Mode: number                  // 工作模式：0-自主模式，1-本地模式，2-测试模式
+  ID?: string                   // 设备ID
+  MODE?: string                 // 工作模式
+  Mode?: number                 // 工作模式数值
+  VER?: string                  // 版本号
+  GPS?: string                  // GPS数据
+  V?: number                    // 电池电压
+  A?: number                    // 电流
+  status?: string               // GPS状态
+  lat?: string                  // 纬度
+  lon?: string                  // 经度
+  Temp?: number                 // 温度
+  TempAlarm?: number            // 温度报警
+  CurrentAlarm?: number         // 电流报警
+  MotorStatus?: number          // 电机状态
+  MotorDirection?: number       // 电机方向
+  MotorSpeed?: number           // 电机转速
+  MotorCurrent?: number         // 电机电流
 
-  // 电机工作状态
-  W0: number                    // 摆渡车电机工作状态：0-停止，1-运行，2-故障
-  W1: number                    // 清扫电机工作状态：0-停止，1-运行，2-故障
-  W2: number                    // 行进电机工作状态：0-停止，1-运行，2-故障
-
-  // 电压信息
-  V: number                     // 小车电池电压
-  V0: number                    // 摆渡车电池电压
-  Va?: number                   // 电池电压告警状态
-  V0a?: number                  // 摆渡车电池电压告警状态
-
-  // 电机转向
-  D0: number                    // 摆渡车电机转动方向：0-顺时针，1-逆时针
-  D1: number                    // 清扫电机转动方向：0-顺时针，1-逆时针
-  D2: number                    // 行进电机转动方向：0-顺时针，1-逆时针
-
-  // 电机电流
-  C0: number                    // 摆渡车电机电流
-  C1: number                    // 清扫电机电流
-  C2: number                    // 行进电机电流
-
-  // 电流告警状态
-  C0a: number                   // 摆渡车电机电流警示：0-正常，1-堵转，2-空转
-  C1a: number                   // 清扫电机电流警示：0-正常，1-堵转，2-空转
-  C2a: number                   // 行进电机电流警示：0-正常，1-堵转，2-空转
-
-  // 温度信息
-  T1: number                    // 温度1
-  T2: number                    // 温度2
-  Ta: number                    // 小车功率件温度警示：0-正常，2-过高
-  T0a: number                   // 摆渡车功率件温度警示：0-正常，2-过高
-
-  // GPS定位信息
-  status: string                // GPS定位状态：A-已定位，V-未定位
-  lat: string                   // 纬度（如：N3650.09558）
-  lon: string                   // 经度（如：E11802.07853）
-  spd?: string                  // 速度
-
-  // 通信信息
-  channel?: string              // 通道
-  mac1?: string                 // MAC地址1
-  mac2?: string                 // MAC地址2
-
-  // 系统信息
-  VerA?: string                 // 版本A
-  VerC?: string                 // 版本C
-  distance?: string             // 距离
-  CLen?: string                 // 长度
-  CSQ?: number                  // 4G信号强度：0-31
-  SysTime?: number              // CPU运行时长（分钟）
-  loc?: number                  // 位置
-
-  // 设置信息
-  Tc?: number                   // 时间间隔
-  Tguard?: number              // 保护时间
-  freq?: number                // 频率
-  Ccoef?: number               // C系数
-  deadtime?: number            // 死区时间
-  LoraMode?: number            // Lora模式
-  Mselect?: number             // M选择
-  PWMen?: number               // PWM使能
-  LoraCH?: number              // Lora通道
-  Dcoef?: number               // D系数
-  VCguard?: number             // VC保护
-  count?: number               // 计数
-  TCPIP?: string               // TCP/IP地址
-  LoraADDR?: number            // Lora地址
-  NETmode?: number             // 网络模式
-  Cmin?: number                // 最小电流
-  Cmax?: number                // 最大电流
-  FastIO?: number              // 快速IO
-  PWMwitdh?: number            // PWM宽度
-  B?: number                   // B值
-  Vcoef?: number               // V系数
-  Vmin?: number                // 最小电压
-  port?: string                // 端口
-  Tb?: number                  // Tb值
+  // 电机参数
+  Vcall?: number                // 报警电压
+  Cnone?: number                // 空转电流
+  Cover?: number                // 过载电流
+  enable?: number               // 是否启用
+  Ccoef?: number                // C系数
+  LoraChannel?: number          // Lora通道
+  Dcoef?: number                // D系数
+  VCguard?: number              // VC保护
+  count?: number                // 计数
+  TCPIP?: string                // TCP/IP地址
+  LoraADDR?: number             // Lora地址
+  NETmode?: number              // 网络模式
+  Cmin?: number                 // 最小电流
+  Cmax?: number                 // 最大电流
+  FastIO?: number               // 快速IO
+  PWMwitdh?: number             // PWM宽度
+  B?: number                    // B值
+  Vcoef?: number                // V系数
+  Vmin?: number                 // 最小电压
+  port?: string                 // 端口
+  Tb?: number                   // Tb值
 
   // 时间信息
-  year?: number                // 年
-  mon?: number                 // 月
-  day?: number                 // 日
-  hous?: number                // 时
-  minu?: number                // 分
-  sec?: number                 // 秒
-  week?: number                // 星期
+  year?: number                 // 年
+  mon?: number                  // 月
+  day?: number                  // 日
+  hous?: number                 // 时
+  minu?: number                 // 分
+  sec?: number                  // 秒
+  week?: number                 // 星期
 
   // 工作时间段配置
-  H?: string                   // 第一时段小时
-  M?: string                   // 第一时段分钟
-  dolly?: string               // 第一时段是否启动
-  H1?: string                  // 第二时段小时
-  M1?: string                  // 第二时段分钟
-  dolly1?: string              // 第二时段是否启动
-  H2?: string                  // 第三时段小时
-  M2?: string                  // 第三时段分钟
-  dolly2?: string              // 第三时段是否启动
+  H?: string                    // 第一时段小时
+  M?: string                    // 第一时段分钟
+  dolly?: string                // 第一时段是否启动
+  H1?: string                   // 第二时段小时
+  M1?: string                   // 第二时段分钟
+  dolly1?: string               // 第二时段是否启动
+  H2?: string                   // 第三时段小时
+  M2?: string                   // 第三时段分钟
+  dolly2?: string               // 第三时段是否启动
 
   // 其他字段
-  [key: string]: any           // 允许其他动态字段
+  [key: string]: any            // 允许其他动态字段
 }
 
 // 设备信息模型 - 用于列表显示
@@ -136,6 +100,10 @@ export interface ConnectionInfo {
   active: boolean               // 是否活跃
   connectedTime: number         // 连接时间戳
   exists?: boolean              // 是否存在
+  deviceId?: string             // 关联的设备ID
+  deviceType?: string           // 设备类型
+  lastActivity?: number         // 最后活动时间
+  disconnectedTime?: number     // 断开连接时间
 }
 
 // 设备统计信息
@@ -156,24 +124,26 @@ export interface DeviceAlerts {
   alertTime: number             // 告警时间
 }
 
+// ==================== 请求类型 ====================
+
 // 设备重启请求
 export interface DeviceResetRequest {
   deviceId: string              // 设备ID
-  flag: 'A' | 'C'              // 设备类型：A-清扫车，C-摆渡车
+  flag: 'A' | 'C'               // 设备类型：A-清扫车，C-摆渡车
   code: string                  // 重启密码，固定为"111111"
 }
 
 // 设备控制请求
 export interface DeviceControlRequest {
   deviceId: string              // 设备ID
-  flag: 'A' | 'C'              // 设备类型：A-清扫车，C-摆渡车
-  key: 1 | 2 | 3 | 4           // 控制指令：1-前进清扫，2-返回清扫，3-停止，4-急停
+  flag: 'A' | 'C'               // 设备类型：A-清扫车，C-摆渡车
+  key: 1 | 2 | 3 | 4            // 控制指令：1-前进清扫，2-返回清扫，3-停止，4-急停
 }
 
 // 设备工作模式请求
 export interface DeviceModeRequest {
   deviceId: string              // 设备ID
-  mode: 0 | 1 | 2              // 工作模式：0-自主模式，1-本地模式，2-测试模式
+  mode: 0 | 1 | 2               // 工作模式：0-自主模式，1-本地模式，2-测试模式
 }
 
 // TCP/IP配置请求
@@ -201,7 +171,7 @@ export interface ScheduleConfigRequest {
 // 电机参数配置请求
 export interface MotorConfigRequest {
   deviceId: string              // 设备ID
-  flag: 'A' | 'C'              // 设备类型：A-清扫车，C-摆渡车
+  flag: 'A' | 'C'               // 设备类型：A-清扫车，C-摆渡车
   vcall: number                 // 报警电压（0.0-30.0V）
   cnone: number                 // 空转电流（0.0-20.0A）
   cover: number                 // 过载电流（0.0-50.0A）
@@ -217,6 +187,8 @@ export interface MessageRequest {
 export interface BroadcastRequest {
   message: string               // 广播消息内容
 }
+
+// ==================== 系统相关类型 ====================
 
 // 健康检查响应
 export interface HealthCheckResponse {
@@ -263,6 +235,8 @@ export interface ProtocolInfo {
   }
 }
 
+// ==================== 枚举类型 ====================
+
 // 工作模式枚举
 export enum WorkMode {
   AUTO = 0,                     // 自主模式
@@ -272,55 +246,57 @@ export enum WorkMode {
 
 // 设备类型枚举
 export enum DeviceType {
-  CLEANER = 'A',               // 清扫车
-  CARRIER = 'C'                // 摆渡车
+  CLEANER = 'A',                // 清扫车
+  CARRIER = 'C'                 // 摆渡车
 }
 
 // 控制命令枚举
 export enum ControlCommand {
-  FORWARD_CLEAN = 1,           // 前进清扫
-  BACKWARD_CLEAN = 2,          // 返回清扫
-  STOP = 3,                    // 停止
-  EMERGENCY_STOP = 4           // 急停
+  FORWARD_CLEAN = 1,            // 前进清扫
+  BACKWARD_CLEAN = 2,           // 返回清扫
+  STOP = 3,                     // 停止
+  EMERGENCY_STOP = 4            // 急停
 }
 
 // 电机状态枚举
 export enum MotorStatus {
-  STOPPED = 0,                 // 停止
-  RUNNING = 1,                 // 运行中
-  FAULT = 2                    // 故障
+  STOPPED = 0,                  // 停止
+  RUNNING = 1,                  // 运行中
+  FAULT = 2                     // 故障
 }
 
 // 电机方向枚举
 export enum MotorDirection {
-  CLOCKWISE = 0,               // 顺时针
-  COUNTERCLOCKWISE = 1         // 逆时针
+  CLOCKWISE = 0,                // 顺时针
+  COUNTERCLOCKWISE = 1          // 逆时针
 }
 
 // 电流告警状态枚举
 export enum CurrentAlarmStatus {
-  NORMAL = 0,                  // 正常
-  BLOCKED = 1,                 // 堵转
-  IDLE = 2                     // 空转
+  NORMAL = 0,                   // 正常
+  BLOCKED = 1,                  // 堵转
+  IDLE = 2                      // 空转
 }
 
 // 温度告警状态枚举
 export enum TemperatureAlarmStatus {
-  NORMAL = 0,                  // 正常
-  OVERHEATED = 2               // 过高
+  NORMAL = 0,                   // 正常
+  OVERHEATED = 2                // 过高
 }
 
 // GPS状态枚举
 export enum GpsStatus {
-  LOCATED = 'A',               // 已定位
-  NOT_LOCATED = 'V'            // 未定位
+  LOCATED = 'A',                // 已定位
+  NOT_LOCATED = 'V'             // 未定位
 }
 
 // 启动状态枚举
 export enum EnableStatus {
-  DISABLED = 0,                // 禁止
-  ENABLED = 1                  // 启动
+  DISABLED = 0,                 // 禁止
+  ENABLED = 1                   // 启动
 }
+
+// ==================== 工具类型 ====================
 
 // 系统命令类型
 export type SystemCommand = 'updat' | 'setsys' | 'setlora' | 'uptime'
@@ -365,40 +341,4 @@ export interface PaginatedResponse<T> {
   size: number                  // 每页大小
   first: boolean                // 是否第一页
   last: boolean                 // 是否最后一页
-}
-
-// 导出所有类型
-export type {
-  ApiResponse,
-  DeviceData,
-  DeviceInfo,
-  ConnectionInfo,
-  DeviceStatistics,
-  DeviceAlerts,
-  DeviceResetRequest,
-  DeviceControlRequest,
-  DeviceModeRequest,
-  TcpIpConfigRequest,
-  ScheduleConfigRequest,
-  MotorConfigRequest,
-  MessageRequest,
-  BroadcastRequest,
-  HealthCheckResponse,
-  ApiDocInfo,
-  ProtocolInfo,
-  LogEntry,
-  PaginationParams,
-  PaginatedResponse
-}
-
-export {
-  WorkMode,
-  DeviceType,
-  ControlCommand,
-  MotorStatus,
-  MotorDirection,
-  CurrentAlarmStatus,
-  TemperatureAlarmStatus,
-  GpsStatus,
-  EnableStatus
 }

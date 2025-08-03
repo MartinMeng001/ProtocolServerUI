@@ -158,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useDeviceStore } from '@/stores/device'
 import { formatDistanceToNow } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
